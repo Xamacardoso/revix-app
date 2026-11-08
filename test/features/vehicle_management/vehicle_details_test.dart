@@ -26,6 +26,50 @@ void main() {
     repository = _FakeVehicleRepository(vehicle);
   });
 
+  testWidgets(
+    'keeps details visible above the action bar and opens card editing',
+    (tester) async {
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+      for (final size in [const Size(412, 915), const Size(1280, 720)]) {
+        await tester.binding.setSurfaceSize(size);
+        await tester.pumpWidget(
+          MaterialApp(
+            home: VehicleDetailsScreen(
+              vehicle: vehicle,
+              vehicleRepository: repository,
+              maintenanceRepository: _FakeMaintenanceRepository([
+                MaintenanceRecord(
+                  vehicleId: vehicle.id,
+                  title: 'Troca de óleo',
+                  type: MaintenanceType.preventive,
+                  date: DateTime(2026, 6, 1),
+                ),
+              ]),
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+        expect(find.text('Atualizar km').hitTestable(), findsOneWidget);
+        expect(tester.getSize(find.byType(ListView)).height, greaterThan(200));
+        await tester.ensureVisible(find.text('Troca de óleo'));
+        await tester.pumpAndSettle();
+        final card = tester.getRect(
+          find.ancestor(
+            of: find.text('Troca de óleo'),
+            matching: find.byType(Card),
+          ),
+        );
+        final footer = tester.getRect(find.byType(SafeArea).last);
+        expect(card.bottom, lessThanOrEqualTo(footer.top));
+        await tester.tap(find.text('Troca de óleo'));
+        await tester.pumpAndSettle();
+        expect(find.text('Editar manutenção'), findsOneWidget);
+        expect(find.text('Troca de óleo'), findsOneWidget);
+        await tester.pumpWidget(const SizedBox.shrink());
+      }
+    },
+  );
+
   testWidgets('updates vehicle odometer without saving a maintenance record', (
     tester,
   ) async {
@@ -134,6 +178,8 @@ void main() {
       ),
     );
     await tester.pumpAndSettle();
+    await tester.drag(find.byType(ListView).first, const Offset(0, -350));
+    await tester.pumpAndSettle();
     expect(find.text('Revisão periódica'), findsOneWidget);
     expect(find.textContaining('km não informado'), findsOneWidget);
     expect(find.text('Troca de óleo'), findsOneWidget);
@@ -174,6 +220,8 @@ void main() {
 
       expect(saver.saved, hasLength(1));
       expect(saver.saved.single.vehicleId, vehicle.id);
+      await tester.drag(find.byType(ListView).first, const Offset(0, -350));
+      await tester.pumpAndSettle();
       expect(find.text('Troca de óleo'), findsOneWidget);
     },
   );

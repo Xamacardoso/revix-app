@@ -49,6 +49,14 @@ O sistema SHALL somar custos de peças e mão de obra quando ambos forem informa
 ### Requirement: Vehicle maintenance timeline
 O sistema SHALL disponibilizar os registros do veículo em ordem cronológica reversa e oferecer filtros `Todas`, `Preventivas` e `Corretivas` nos detalhes do veículo.
 
+#### Scenario: Keep vehicle details visible above the action bar
+- **WHEN** a pessoa abre os detalhes do veículo em uma tela mobile ou desktop
+- **THEN** os dados e o histórico permanecem acessíveis por rolagem, e a barra inferior de registrar ação ocupa somente a altura necessária ao botão, sem cobrir os registros
+
+#### Scenario: Open maintenance editing from its card
+- **WHEN** a pessoa toca no card de uma manutenção
+- **THEN** o sistema abre o formulário de edição preenchido com esse registro
+
 #### Scenario: Filter maintenance timeline
 - **WHEN** a pessoa seleciona `Todas`, `Preventivas` ou `Corretivas`
 - **THEN** o sistema mostra os registros correspondentes em ordem cronológica reversa

@@ -157,6 +157,7 @@ class _MaintenanceFormScreenState extends State<MaintenanceFormScreen> {
             ),
             const SizedBox(height: 14),
             DropdownButtonFormField<MaintenanceType>(
+              isExpanded: true,
               initialValue: _type,
               decoration: _fieldDecoration(
                 labelText: 'Tipo *',

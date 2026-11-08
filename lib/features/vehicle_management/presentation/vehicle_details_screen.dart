@@ -253,19 +253,25 @@ class _VehicleDetailsScreenState extends State<VehicleDetailsScreen> {
                     ),
                   ),
                   const SizedBox(height: 4),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.end,
+                  Wrap(
+                    spacing: 16,
+                    runSpacing: 12,
+                    crossAxisAlignment: WrapCrossAlignment.center,
                     children: [
-                      Text(
-                        _formatOdometer(vehicle.currentOdometer),
-                        style: Theme.of(context).textTheme.headlineMedium
-                            ?.copyWith(fontWeight: FontWeight.w800),
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            _formatOdometer(vehicle.currentOdometer),
+                            style: Theme.of(context).textTheme.headlineMedium
+                                ?.copyWith(fontWeight: FontWeight.w800),
+                          ),
+                          const Padding(
+                            padding: EdgeInsets.only(left: 7, bottom: 5),
+                            child: Text('km'),
+                          ),
+                        ],
                       ),
-                      const Padding(
-                        padding: EdgeInsets.only(left: 7, bottom: 5),
-                        child: Text('km'),
-                      ),
-                      const Spacer(),
                       OutlinedButton.icon(
                         onPressed: _updateOdometer,
                         icon: const Icon(Icons.speed_outlined),
@@ -367,6 +373,7 @@ class _VehicleDetailsScreenState extends State<VehicleDetailsScreen> {
                   for (final record in records)
                     Card(
                       child: ListTile(
+                        onTap: () => _createMaintenance(initialRecord: record),
                         leading: Icon(
                           _maintenanceIcon(record.type),
                           color: Theme.of(context).colorScheme.primary,
@@ -392,10 +399,17 @@ class _VehicleDetailsScreenState extends State<VehicleDetailsScreen> {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: _createMaintenance,
-        icon: const Icon(Icons.add),
-        label: const Text('Registrar ação'),
+      bottomNavigationBar: SafeArea(
+        minimum: const EdgeInsets.fromLTRB(20, 12, 20, 16),
+        child: Align(
+          heightFactor: 1,
+          alignment: Alignment.centerRight,
+          child: FilledButton.icon(
+            onPressed: _createMaintenance,
+            icon: const Icon(Icons.add),
+            label: const Text('Registrar ação'),
+          ),
+        ),
       ),
     );
   }
